@@ -3,9 +3,10 @@ import os
 from glob import glob
 from skimage.external import tifffile as tiff
 import numpy as np
+import pandas as pd
 
 dir = sys.argv[1]
-
+samples = pd.read_csv(sys.argv[2], sep=';', header=0)
 folders = glob(dir+'/*/')
 
 for folder in folders:
@@ -17,6 +18,7 @@ for folder in folders:
     im = np.zeros(newshape)
     for i, chan in enumerate(channels):
         im[i] = tiff.imread(channels[i])
-    filename = str(well) + '_composite.tif'
+    samplename = samples[samples['Well'].str.contains(well)]['Sample'].values[0]
+    filename = str(samplename) + '_composite.tif'
     filedir = os.path.join(folder, filename)
-    tiff.imsave(filedir, im.astype('uint16'))
+    tiff.imsave(filedir, im.astype('uint16'), imagej=True)
