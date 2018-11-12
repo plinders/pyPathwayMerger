@@ -14,7 +14,7 @@ for folder in folders:
     channels = glob(folder+'*.tif')
     channels.sort()
     dim = tiff.imread(channels[0])
-    newshape = (3, dim.shape[0], dim.shape[1])
+    newshape = (len(channels), dim.shape[0], dim.shape[1])
     im = np.zeros(newshape)
     for i, chan in enumerate(channels):
         im[i] = tiff.imread(channels[i])
